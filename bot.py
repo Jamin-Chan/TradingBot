@@ -1,7 +1,10 @@
 
 import alpaca_trade_api as tradeapi
 import pandas as pd
+import pandas_ta as ta
 import numpy as np
+import mplfinance as mpf
+import matplotlib.pyplot as plt
 import time, requests, datetime, json
 
 
@@ -23,8 +26,8 @@ except:
     print("URL error")
 
 
-symbol = 'BTCUSD'
-dataSymbol = 'BTC/USD'
+symbol = 'DOGEUSD'
+dataSymbol = 'DOGE/USD'
 short_ma_length = 50
 long_ma_length = 200
 percent_of_equity = 0.25
@@ -94,7 +97,7 @@ def sell_stock(symbol, qty):
 def getMarketData(symbol):
     now = datetime.datetime.now(datetime.UTC)
     print(now)
-    startTime = now - datetime.timedelta(hours=5)
+    startTime = now - datetime.timedelta(hours=24)
     converted_datetime_str = startTime.strftime('%Y-%m-%dT%H:%M:%SZ')
     print(converted_datetime_str)
 
@@ -113,7 +116,43 @@ def getMarketData(symbol):
     for i in marketData["bars"][symbol]:
         print(i)
     # goal, get ema and make changes based on ema
+
+    #creates the graph for the data retrived
+    creatCandleStickgraph(marketData["bars"][symbol])
     return None
+
+
+def creatCandleStickgraph(data):
+    df = pd.DataFrame(data)
+    df.rename(columns={'t': 'Date', 'o': 'Open', 'h': 'High', 'l': 'Low', 'c': 'Close'}, inplace=True)
+
+    #ema
+    df["EMA_slow"]=ta.ema(df.Close, length=20)
+    df["EMA_fast"]=ta.ema(df.Close, length=10)
+    
+
+    #rsi
+    df['RSI']=ta.rsi(df.Close, length=10)
+
+    #bollinger bands
+    my_bbands = ta.bbands(df.Close, length=15, std=1.5)
+    df=df.join(my_bbands)
+
+    addplot = [
+        mpf.make_addplot(df['EMA_slow'], color='blue', secondary_y=False),
+        mpf.make_addplot(df['EMA_fast'], color='red', secondary_y=False),
+        mpf.make_addplot(df['RSI'], panel=1, color='black', secondary_y=False)
+    ]
+
+    df['Date'] = pd.to_datetime(df['Date'])
+    df.set_index('Date', inplace=True)
+
+    print(df)
+    mpf.plot(df, type='candle', style='charles', title=f'Candlestick Chart {symbol}', ylabel='Price', volume=False, addplot=addplot, panel_ratios=(2,1))
+    plt.show()
+
+
+
 
 
 #buy_stock(symbol, 1)
