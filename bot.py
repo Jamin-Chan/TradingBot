@@ -13,7 +13,7 @@ from config import SECRET_KEY
 
 
 # Replace these with your own API key and secret
-
+# REMEMBER THIS IS PAPER FOR NOW
 BASE_URL = 'https://paper-api.alpaca.markets'   # Use 'https://api.alpaca.markets' for live trading
 ACCOUNT_URL = "{}/v2/account".format(BASE_URL)
 HEADERS = {'APCA-API-KEY-ID': API_KEY, 'APCA-API-SECRET-KEY': SECRET_KEY}
@@ -135,13 +135,18 @@ def creatCandleStickgraph(data):
     df['RSI']=ta.rsi(df.Close, length=10)
 
     #bollinger bands
-    my_bbands = ta.bbands(df.Close, length=15, std=1.5)
-    df=df.join(my_bbands)
-
+    #my_bbands = ta.bbands(df.Close, length=15, std=1.5)
+    #df=df.join(my_bbands)
+    df[['lower_band', 'mid', 'upper_band' ]] = ta.bbands(df.Close, length=15, std=1.5).iloc[:, :3]
+    
+    #plotting
     addplot = [
         mpf.make_addplot(df['EMA_slow'], color='blue', secondary_y=False),
         mpf.make_addplot(df['EMA_fast'], color='red', secondary_y=False),
-        mpf.make_addplot(df['RSI'], panel=1, color='black', secondary_y=False)
+        mpf.make_addplot(df['RSI'], panel=1, color='black', secondary_y=False),
+        mpf.make_addplot(df['lower_band'], color = 'green'),
+        mpf.make_addplot(df['mid'], color = 'yellow'),
+        mpf.make_addplot(df['upper_band'], color = 'orange')
     ]
 
     df['Date'] = pd.to_datetime(df['Date'])
