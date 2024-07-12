@@ -26,8 +26,8 @@ except:
     print("URL error")
 
 
-symbol = 'DOGEUSD'
-dataSymbol = 'DOGE/USD'
+symbol = 'BTCUSD'
+dataSymbol = 'BTC/USD'
 short_ma_length = 50
 long_ma_length = 200
 percent_of_equity = 0.25
@@ -97,7 +97,7 @@ def sell_stock(symbol, qty):
 def getMarketData(symbol):
     now = datetime.datetime.now(datetime.UTC)
     print(now)
-    startTime = now - datetime.timedelta(hours=24)
+    startTime = now - datetime.timedelta(hours=48)
     converted_datetime_str = startTime.strftime('%Y-%m-%dT%H:%M:%SZ')
     print(converted_datetime_str)
 
@@ -112,7 +112,13 @@ def getMarketData(symbol):
     }
     response = requests.get(url, headers=headers)
     marketData = json.loads(response.text)
+
     # c = closing, h = high, l = low, n = no idea, o = opening, t = time, v = volume, vw = volume weighted/vwap
+    j=0
+    for i, item in enumerate(reversed(marketData["bars"][symbol])):
+        j+=1
+        item['index'] = j
+
     for i in marketData["bars"][symbol]:
         print(i)
     # goal, get ema and make changes based on ema
@@ -137,7 +143,7 @@ def creatCandleStickgraph(data):
     #bollinger bands
     #my_bbands = ta.bbands(df.Close, length=15, std=1.5)
     #df=df.join(my_bbands)
-    df[['lower_band', 'mid', 'upper_band' ]] = ta.bbands(df.Close, length=15, std=1.5).iloc[:, :3]
+    df[['lower_band', 'mid', 'upper_band' ]] = ta.bbands(df.Close, length=20, std=2).iloc[:, :3]
     
     #plotting
     addplot = [
@@ -145,7 +151,7 @@ def creatCandleStickgraph(data):
         mpf.make_addplot(df['EMA_fast'], color='red', secondary_y=False),
         mpf.make_addplot(df['RSI'], panel=1, color='black', secondary_y=False),
         mpf.make_addplot(df['lower_band'], color = 'green'),
-        mpf.make_addplot(df['mid'], color = 'yellow'),
+        #mpf.make_addplot(df['mid'], color = 'yellow'),
         mpf.make_addplot(df['upper_band'], color = 'orange')
     ]
 
