@@ -26,8 +26,8 @@ except:
     print("URL error")
 
 
-symbol = 'BTCUSD'
-dataSymbol = 'BTC/USD'
+symbol = 'BTCUSD'  #for orders and buy and sell
+dataSymbol = 'BTC/USD' #for getting the data for this symbol
 short_ma_length = 50
 long_ma_length = 200
 percent_of_equity = 0.25
@@ -118,14 +118,15 @@ def getMarketData(symbol):
     for i, item in enumerate(reversed(marketData["bars"][symbol])):
         j+=1
         item['index'] = j
-
+    # is this not the stupid candel headass data LOOK HERE LOOK HERE LOOK HERE
+    #
     for i in marketData["bars"][symbol]:
         print(i)
     # goal, get ema and make changes based on ema
 
     #creates the graph for the data retrived
     creatCandleStickgraph(marketData["bars"][symbol])
-    return None
+    return marketData
 
 
 def creatCandleStickgraph(data):
@@ -157,16 +158,41 @@ def creatCandleStickgraph(data):
 
     df['Date'] = pd.to_datetime(df['Date'])
     df.set_index('Date', inplace=True)
-
+    
+    print("this is df")
     print(df)
     mpf.plot(df, type='candle', style='charles', title=f'Candlestick Chart {symbol}', ylabel='Price', volume=False, addplot=addplot, panel_ratios=(2,1))
     plt.show()
+    return(df)
 
 
+def getCurrentCandle(df, symbol):
+
+    
+
+
+def EMAIndicator(current_candle, backcandles):
+    if(df["index"] == 1 ):
+        print("fensikd")
+
+    return None
+
+
+
+def BBIndicator(current_candle, backcandles):
+    return None
+
+
+
+
+def finalIndicator(current_candle, backcandles):
+    if(BBIndicator(current_candle, backcandles) == 1 & EMAIndicator(df, current_candle, backcandles) == 1):
+        print("buy")
 
 
 
 #buy_stock(symbol, 1)
 #sell_stock(symbol, 1)
-getMarketData(dataSymbol)
+df = getMarketData(dataSymbol)
+getCurrentCandle(df, dataSymbol)
 #getAccountInfo()
