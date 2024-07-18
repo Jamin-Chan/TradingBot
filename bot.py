@@ -165,9 +165,15 @@ def creatCandleStickgraph(data):
     plt.show()
     return(df)
 
+# gets most recent candle for the current symbol
+def getCurrentCandle(df, symbol): 
+    for item in df["bars"][symbol]:
+        currentCandle = item
+        print(currentCandle)
+    print(f"this is what it print")
+    print(currentCandle)
 
-def getCurrentCandle(df, symbol):
-
+    return currentCandle 
     
 
 
