@@ -162,29 +162,46 @@ def creatCandleStickgraph(data):
     print("this is df")
     print(df)
     mpf.plot(df, type='candle', style='charles', title=f'Candlestick Chart {symbol}', ylabel='Price', volume=False, addplot=addplot, panel_ratios=(2,1))
+
     plt.show()
     return(df)
 
-# gets most recent candle for the current symbol
-def getCurrentCandle(df, symbol): 
+
+def getCurrentCandle(df, symbol):
     for item in df["bars"][symbol]:
         currentCandle = item
-        print(currentCandle)
+        #print(currentCandle)
     print(f"this is what it print")
     print(currentCandle)
 
     return currentCandle 
+
+def getBackCandles(df, symbol):
+    backCandles = []
+    for item in df["bars"][symbol]:
+        backCandles.append(item)
+        #print(backCandles)
+
+        if(len(backCandles) > 21):
+            backCandles.pop(0)
     
+    backCandles.pop() #get rid of current candle
+    print(f"this is what it print (backcandles)")
+    for candles in backCandles:
+        print(candles)
 
+    return backCandles 
 
+#checks whether the candles crosses both ema lines
 def EMAIndicator(current_candle, backcandles):
-    if(df["index"] == 1 ):
-        print("fensikd")
+    if(current_candle["EMA_slow"] > current_candle["low"] & current_candle["EMA_fast"] > current_candle["low"]):
+        print("both lines are lower than the lowest point")
+    
 
     return None
 
 
-
+#checks whether the candles crosses or touches the bollinger bands indicating bounces
 def BBIndicator(current_candle, backcandles):
     return None
 
@@ -196,9 +213,16 @@ def finalIndicator(current_candle, backcandles):
         print("buy")
 
 
+#creates the stop loss and take profit after buying in 
+#(past 20 candles, lowest point is stop loss)
+def setSLTP():
+    return None
+
+
 
 #buy_stock(symbol, 1)
 #sell_stock(symbol, 1)
 df = getMarketData(dataSymbol)
-getCurrentCandle(df, dataSymbol)
+#getCurrentCandle(df, dataSymbol)
+getBackCandles(df, dataSymbol)
 #getAccountInfo()
