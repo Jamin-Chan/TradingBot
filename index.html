@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Chart</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.41.0/apexcharts.min.js"></script>
+</head>
+<body>
+    <div class="trading-container">
+        <header class="trading-header">
+            <div class="symbol-info">
+                <h1>BTC/USD</h1>
+                <span class="price">$6633.33</span>
+                <span class="change positive">+1.2%</span>
+            </div>
+            <div class="timeframe-selector">
+                <button class="active">1m</button>
+                <button>5m</button>
+                <button>15m</button>
+                <button>1h</button>
+                <button>4h</button>
+                <button>1d</button>
+            </div>
+        </header>
+        <main class="chart-container">
+          <div id="chart"></div>
+          <div id="rsi-chart"></div>
+        </main>
+        <div class="trading-footer">
+            <div class="volume">Vol: 24.5K</div>
+            <div class="range">24h Range: 6620.00 - 6651.00</div>
+        </div>
+    </div>
+    <script src="chart.js"></script>
+</body>
+</html>

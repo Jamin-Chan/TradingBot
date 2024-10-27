@@ -193,8 +193,8 @@ def getBackCandles(df, symbol):
     return backCandles 
 
 #checks whether the candles crosses both ema lines
-def EMAIndicator(current_candle, backcandles):
-    if(current_candle["EMA_slow"] > current_candle["low"] & current_candle["EMA_fast"] > current_candle["low"]):
+def EMAIndicator(currentCandle, backCandles):
+    if(currentCandle["EMA_slow"] > currentCandle["low"] & currentCandle["EMA_fast"] > currentCandle["low"]):
         print("both lines are lower than the lowest point")
     
 
